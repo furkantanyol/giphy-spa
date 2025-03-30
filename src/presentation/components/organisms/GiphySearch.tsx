@@ -6,8 +6,8 @@ import {
 } from '@/application/hooks/useImages';
 import { useToast } from '@/application/hooks/useToast';
 import { DEFAULT_LIMIT } from '@/domain/models/giphy-api';
-import GifGrid from '@/presentation/components/GifGrid';
-import SearchForm from '@/presentation/components/SearchForm';
+import GifGrid from '@/presentation/components/organisms/GifGrid';
+import SearchForm from '@/presentation/components/organisms/SearchForm';
 import { useState } from 'react';
 
 export default function GiphySearch() {

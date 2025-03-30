@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchGifs } from '@/application/hooks/useImages';
-import GiphySearch from '@/presentation/components/GiphySearch';
+import GiphySearch from '@/presentation/components/organisms/GiphySearch';
 import { useEffect } from 'react';
 
 export default function Home() {

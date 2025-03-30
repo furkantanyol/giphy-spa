@@ -2,8 +2,8 @@
 
 import { type IGiphyApiSearchResponse } from '@/domain/models/giphy-api';
 import { LoaderCircleIcon } from 'lucide-react';
-import EmptyState from './EmptyState';
-import GifCard from './GifCard';
+import EmptyState from '../elements/EmptyState';
+import GifCard from '../elements/GifCard';
 
 interface GifGridProps {
   data?: IGiphyApiSearchResponse['data'];
