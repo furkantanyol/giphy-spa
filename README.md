@@ -18,6 +18,9 @@ A minimalistic React application that allows users to search for GIFs using the 
 - Tailwind CSS for styling
 - React Query for data fetching and caching
 - Zod for schema validation
+- shadcn/ui for UI components
+- React Hook Form for form handling
+- Sonner for toast notifications
 
 ## Project Structure
 
@@ -33,7 +36,7 @@ The application follows a clean architecture pattern:
 ### Prerequisites
 
 - Node.js (18.x or later)
-- npm or yarn
+- npm, yarn, or pnpm
 
 ### Installation
 
@@ -47,9 +50,14 @@ The application follows a clean architecture pattern:
 2. Install dependencies:
 
    ```bash
+   # Using npm
    npm install
-   # or
+
+   # Using yarn
    yarn
+
+   # Using pnpm
+   pnpm install
    ```
 
 3. Create a `.env.local` file with your GIPHY API key:
@@ -60,9 +68,14 @@ The application follows a clean architecture pattern:
 ### Running the application
 
 ```bash
+# Using npm
 npm run dev
-# or
+
+# Using yarn
 yarn dev
+
+# Using pnpm
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
@@ -70,11 +83,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 ## Build for production
 
 ```bash
+# Using npm
 npm run build
 npm start
-# or
+
+# Using yarn
 yarn build
 yarn start
+
+# Using pnpm
+pnpm build
+pnpm start
 ```
 
 ## Code Quality
@@ -84,11 +103,15 @@ yarn start
 npm run lint
 # or
 yarn lint
+# or
+pnpm lint
 
 # Format code
 npm run format
 # or
 yarn format
+# or
+pnpm format
 ```
 
 ## License
