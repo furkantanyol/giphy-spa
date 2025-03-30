@@ -8,9 +8,14 @@ import GifCard from '../elements/GifCard';
 interface GifGridProps {
   data?: IGiphyApiSearchResponse['data'];
   isLoading: boolean;
+  hasSearched?: boolean;
 }
 
-export default function GifGrid({ data, isLoading }: GifGridProps) {
+export default function GifGrid({
+  data,
+  isLoading,
+  hasSearched = false,
+}: GifGridProps) {
   if (isLoading) {
     return (
       <div
@@ -24,7 +29,7 @@ export default function GifGrid({ data, isLoading }: GifGridProps) {
   }
 
   if (!data || data.length === 0) {
-    return <EmptyState />;
+    return <EmptyState isInitialState={!hasSearched} />;
   }
 
   return (

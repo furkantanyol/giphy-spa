@@ -13,6 +13,7 @@ import { useState } from 'react';
 export default function GiphySearch() {
   const [searchResults, setSearchResults] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const searchGifs = useSearchGifs();
   const abortSearch = useAbortGiphySearch();
@@ -22,6 +23,7 @@ export default function GiphySearch() {
     if (!query.trim()) return;
 
     setIsLoading(true);
+    setHasSearched(true);
 
     try {
       const result = await searchGifs.mutateAsync({
@@ -68,7 +70,11 @@ export default function GiphySearch() {
       </section>
 
       <section aria-label="Search results">
-        <GifGrid data={searchResults?.data} isLoading={isLoading} />
+        <GifGrid
+          data={searchResults?.data}
+          isLoading={isLoading}
+          hasSearched={hasSearched}
+        />
       </section>
     </div>
   );

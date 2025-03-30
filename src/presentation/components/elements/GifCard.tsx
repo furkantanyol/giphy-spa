@@ -1,8 +1,8 @@
 'use client';
 
 import { gifSchema } from '@/domain/models/giphy-api';
-import { Card, CardContent } from '@/presentation/components/atoms/card';
 import { z } from '@/lib/validation';
+import { Card, CardContent } from '@/presentation/components/atoms/card';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -52,6 +52,7 @@ export default function GifCard({ gif }: GifCardProps) {
               className={`object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={handleLoad}
               onError={handleError}
+              unoptimized
             />
 
             {gif.title && (
