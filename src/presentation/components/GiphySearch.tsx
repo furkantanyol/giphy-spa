@@ -55,13 +55,21 @@ export default function GiphySearch() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex flex-col gap-6">
-      <SearchForm
-        onSearch={handleSearch}
-        onCancel={handleAbort}
-        isLoading={isLoading}
-      />
-      <GifGrid data={searchResults?.data} isLoading={isLoading} />
+    <div
+      className="w-full max-w-3xl mx-auto flex flex-col gap-6"
+      aria-live="polite"
+    >
+      <section aria-label="Search controls">
+        <SearchForm
+          onSearch={handleSearch}
+          onCancel={handleAbort}
+          isLoading={isLoading}
+        />
+      </section>
+
+      <section aria-label="Search results">
+        <GifGrid data={searchResults?.data} isLoading={isLoading} />
+      </section>
     </div>
   );
 }

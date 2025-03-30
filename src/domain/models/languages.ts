@@ -8,7 +8,6 @@ const languageSchema = z.object({
 export type Language = z.infer<typeof languageSchema>;
 
 export const SUPPORTED_LANGUAGES: Language[] = [
-  { code: '', name: 'All Languages', flag: '🌐' },
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'es', name: 'Spanish', flag: '🇪🇸' },
   { code: 'pt', name: 'Portuguese', flag: '🇵🇹' },

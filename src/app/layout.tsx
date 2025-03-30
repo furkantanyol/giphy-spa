@@ -1,26 +1,14 @@
 'use client';
 
 import { ServicesProvider } from '@/application/hooks/useServices';
-import { ToastProvider } from '@/application/hooks/useToast';
 import { ImageService } from '@/application/services/image.service';
 import { IServices } from '@/domain/models/services';
 import { GiphyApi } from '@/infrastructure/api/giphy.api';
 import { HttpClient } from '@/infrastructure/api/http-client';
+import { geistMono, geistSans, inter } from '@/lib/fonts';
 import { QueryClient, QueryClientProvider } from '@/lib/remote-state';
-import { Geist, Geist_Mono, Inter } from 'next/font/google';
+import { Toaster } from '@/presentation/components/atoms/sonner';
 import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans' });
 
 function initializeServices(): IServices {
   const giphyApi = new GiphyApi(new HttpClient());
@@ -43,7 +31,8 @@ export default function RootLayout({
       >
         <QueryClientProvider client={queryClient}>
           <ServicesProvider services={services}>
-            <ToastProvider>{children}</ToastProvider>
+            {children}
+            <Toaster />
           </ServicesProvider>
         </QueryClientProvider>
       </body>

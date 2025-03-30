@@ -1,7 +1,26 @@
 'use client';
 
 import { SUPPORTED_LANGUAGES } from '@/domain/models/languages';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { useForm, zodResolver } from '@/lib/form';
+import { SearchIcon, XIcon } from '@/lib/icons';
+import { z } from '@/lib/validation';
+import { Button } from '@/presentation/components/atoms/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/presentation/components/atoms/form';
+import { Input } from '@/presentation/components/atoms/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/presentation/components/atoms/select';
+import { useId } from 'react';
 
 interface SearchFormProps {
   onSearch: (query: string, language?: string) => void;
@@ -9,89 +28,127 @@ interface SearchFormProps {
   isLoading: boolean;
 }
 
+const searchFormSchema = z.object({
+  query: z.string().min(1, 'Please enter a search term'),
+  language: z.string().default('en'),
+});
+
+type SearchFormValues = z.infer<typeof searchFormSchema>;
+
 export default function SearchForm({
   onSearch,
   onCancel,
   isLoading,
 }: SearchFormProps) {
-  const [query, setQuery] = useState('');
-  const [language, setLanguage] = useState('en');
+  const searchInputId = useId();
+  const form = useForm<SearchFormValues>({
+    resolver: zodResolver(searchFormSchema),
+    defaultValues: {
+      query: '',
+      language: 'en',
+    },
+  });
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      onSearch(query, language || undefined);
-    }
-  };
+  // Watch the query field to reactively update the button state
+  const query = form.watch('query');
 
-  const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
-
-  const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value);
+  const handleSubmit = (values: SearchFormValues) => {
+    onSearch(values.query, values.language || 'en');
   };
 
   const handleClear = () => {
-    setQuery('');
+    form.reset();
     if (isLoading) {
       onCancel();
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="flex-1">
-          <input
-            type="text"
-            value={query}
-            onChange={handleQueryChange}
-            placeholder="Search for GIFs..."
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isLoading}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="w-full space-y-4"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+          <FormField
+            control={form.control}
+            name="query"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel htmlFor={searchInputId}>Search</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      id={searchInputId}
+                      placeholder="Search for GIFs..."
+                      disabled={isLoading}
+                      {...field}
+                    />
+                    {field.value && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                        onClick={handleClear}
+                        disabled={isLoading}
+                        aria-label="Clear search"
+                      >
+                        <XIcon className="size-4" />
+                      </Button>
+                    )}
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="w-full sm:w-40">
-          <select
-            value={language}
-            onChange={handleLanguageChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isLoading}
-          >
-            {SUPPORTED_LANGUAGES.map((lang) => (
-              <option
-                key={lang.code}
-                value={lang.code}
-                className="flex items-center justify-between gap-2"
-              >
-                {lang.flag} {lang.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          <FormField
+            control={form.control}
+            name="language"
+            render={({ field }) => (
+              <FormItem className="w-full sm:w-40">
+                <FormLabel>Language</FormLabel>
+                <Select
+                  disabled={isLoading}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        <span>
+                          {lang.flag} {lang.name}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
 
-        <div className="flex gap-2">
-          <button
+          <Button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isLoading || !query.trim()}
+            className="h-10 px-4"
           >
-            {isLoading ? 'Searching...' : 'Search'}
-          </button>
-
-          {query && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              {isLoading ? 'Cancel' : 'Clear'}
-            </button>
-          )}
+            {isLoading ? (
+              <span>Searching...</span>
+            ) : (
+              <>
+                <SearchIcon className="size-4" />
+                <span>Search</span>
+              </>
+            )}
+          </Button>
         </div>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }
